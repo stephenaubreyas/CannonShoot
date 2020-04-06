@@ -102,12 +102,4 @@ public class BulletSpawner : MonoBehaviour
 		}
 		transform.position = pos;
 	}
-	private void OnTriggerEnter(Collider hit)
-	{
-		if (hit.gameObject.tag == "Enemy")
-		{
-			Destroy(Player);
-			playerAlive = false;
-		}
-	}
 }

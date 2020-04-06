@@ -18,6 +18,8 @@ public class Projectile : MonoBehaviour
 
 	void Awake()
 	{
+        GameManager.shoot += LaunchProjectile;
+
 		isAlive = true;
 	}
 	void Start()
@@ -86,6 +88,9 @@ public class Projectile : MonoBehaviour
 				transform.position = pos;
 			}
 	}
+
+  
+
 	void OnMouseClick()
 	{
 		if(Input.GetMouseButton(1) == false && Input.GetMouseButtonDown(1) == false && Input.GetMouseButtonUp(1) == false && Input.GetMouseButtonDown(0) == false)
@@ -94,11 +99,7 @@ public class Projectile : MonoBehaviour
 		}
 		if (Input.GetMouseButton(1))
 		{
-			Cursor.visible = false;
-			Cursor.lockState = CursorLockMode.Confined;
-			lineVisual.enabled = true;
-			Pointer.SetActive(true);
-			LaunchProjectile();
+            GameManager.InvokeShootMethod();
 		}
 		else if (Input.GetMouseButtonUp(1))
 		{
@@ -118,7 +119,12 @@ public class Projectile : MonoBehaviour
 	#region Projectile
 	void LaunchProjectile()
 	{
-		Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+        lineVisual.enabled = true;
+        Pointer.SetActive(true);
+
+        Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
 		if (Physics.Raycast(camRay, out hit, 100f, layer))
@@ -130,13 +136,13 @@ public class Projectile : MonoBehaviour
 
 			transform.rotation = Quaternion.LookRotation(Vo);
 
-			if (Input.GetMouseButtonDown(0))
-			{
-				muzzleFlash.Play();
-				Rigidbody obj = Instantiate(bulletPrefabs, shootPoint.transform.position, Quaternion.identity);
-				obj.velocity = Vo;
-			}
-		}
+            if (Input.GetMouseButtonDown(0))
+            {
+                muzzleFlash.Play();
+                Rigidbody obj = Instantiate(bulletPrefabs, shootPoint.transform.position, Quaternion.identity);
+                obj.velocity = Vo;
+            }
+        }
 	}
 	void Visualize(Vector3 vo)
 	{

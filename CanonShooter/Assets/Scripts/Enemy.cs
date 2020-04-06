@@ -15,18 +15,37 @@ public class Enemy : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 		enemy = this.gameObject;
 		enemy.GetComponent<Renderer>().material.color = new Color(0, 1f, 1f);
+
+        Debug.Log("Player : " + player);
 	}
 
-	void OnTriggerEnter(Collider hit)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Player")
+        {
+            Debug.Log("hey kedar?");
+
+            Destroy(player);
+        }
+    }
+
+    void OnTriggerEnter(Collider hit)
 	{
 		if (hit.gameObject.tag == "Bullet")
 		{
 			temp = Instantiate(explosion, hit.gameObject.transform.position, Quaternion.identity) as GameObject;
-			enemy.SetActive(false);
-			enemy.transform.position = new Vector3(Random.Range(Random.Range(-45, 0), Random.Range(0, 45)), 1f, Random.Range(31, 50));
-			//hit.gameObject.SetActive(false);
+
+            enemy.SetActive(false);
+
+            enemy.transform.position = new Vector3(Random.Range(Random.Range(-45, 0), Random.Range(0, 45)), 1f, Random.Range(31, 50));
+
+            GameManager.Instance.score++;
+
+            GameManager.Instance.scoreText.text = "Score : " + GameManager.Instance.score.ToString();
+
 			Destroy(hit.gameObject);
-			Destroy(temp, 1f);
+
+            Destroy(temp, 1f);
 		}
 	}
 	private void FixedUpdate()
