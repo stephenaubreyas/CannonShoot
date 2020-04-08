@@ -20,6 +20,8 @@ public class Projectile : MonoBehaviour
 	{
         GameManager.shoot += LaunchProjectile;
 
+        GameManager.playerMovement += Movements;
+
 		isAlive = true;
 	}
 	void Start()
@@ -39,55 +41,206 @@ public class Projectile : MonoBehaviour
 		OnMouseClick();
 	}
 	void Movekey()
-	{
-		pos = transform.position;
-		if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
-		{
-			return;
-		}
-		else
-		{
-			Movement();
-		}
+    {
+
+
+		//pos = transform.position;
+        if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        {
+            GameManager.Instance.movement = PlayerMovements.ForwardLeft;
+        }
+        else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
+        {
+            GameManager.Instance.movement = PlayerMovements.LeftForward;
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Right)
+        {
+            GameManager.Instance.movement = PlayerMovements.ForwardRight;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
+        {
+            GameManager.Instance.movement = PlayerMovements.RightForward;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        {
+            GameManager.Instance.movement = PlayerMovements.BackwardLeft;
+        }
+        else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
+        {
+            GameManager.Instance.movement = PlayerMovements.LeftBackward;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Right)
+        {
+            GameManager.Instance.movement = PlayerMovements.BackwardRight;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
+        {
+            GameManager.Instance.movement = PlayerMovements.RightBackward;
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.Left;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.Right;
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.Forward;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.Backward;
+        }
+
+        else if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.None;
+        }
+
+        //Movements(GameManager.Instance.movement);
+
+        GameManager.InvokePlayerMethod(GameManager.Instance.movement);
 	}
-	void Movement()
-	{
-			pos = transform.position;
 
-			if (Input.GetAxisRaw("Horizontal") > 0)
-			{
-				pos.x += speed * Time.deltaTime;
-			}
-			else if (Input.GetAxisRaw("Horizontal") < 0)
-			{
-				pos.x -= speed * Time.deltaTime;
-			}
+    void Movement()
+    {
+        pos = transform.position;
 
-			distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, pos.z));
+        if (Input.GetAxisRaw("Horizontal") > 0)
+        {
+            pos.x += speed * Time.deltaTime;
+        }
+        else if (Input.GetAxisRaw("Horizontal") < 0)
+        {
+            pos.x -= speed * Time.deltaTime;
+        }
 
-			if (Input.GetAxisRaw("Vertical") > 0)
-			{
-				pos.z += speed * Time.deltaTime;
-			}
-			else if (Input.GetAxisRaw("Vertical") < 0)
-			{
-				pos.z -= speed * Time.deltaTime;
-			}
+        distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, pos.z));
 
-			distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, centerPosition.z));
+        if (Input.GetAxisRaw("Vertical") > 0)
+        {
+            pos.z += speed * Time.deltaTime;
+        }
+        else if (Input.GetAxisRaw("Vertical") < 0)
+        {
+            pos.z -= speed * Time.deltaTime;
+        }
 
-			if (distance < radius)
-			{
-				transform.position = pos;
-			}
-			else
-			{
-				allowedPos = pos - centerPosition;
-				allowedPos *= radius / distance;
-				pos = centerPosition + allowedPos;
-				transform.position = pos;
-			}
-	}
+        distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, centerPosition.z));
+
+        if (distance < radius)
+        {
+            transform.position = pos;
+        }
+        else
+        {
+            allowedPos = pos - centerPosition;
+            allowedPos *= radius / distance;
+            pos = centerPosition + allowedPos;
+            transform.position = pos;
+        }
+    }
+
+    void Movements(PlayerMovements movements)
+    {
+        pos = transform.position;
+
+        if(movements == PlayerMovements.None)
+        {
+            return;
+        }
+       else if (movements == PlayerMovements.Left)
+        {
+            pos.x -= speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.Right)
+        {
+            pos.x += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.Forward)
+        {
+            pos.z += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.Backward)
+        {
+            pos.z -= speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.RightForward)
+        {
+            pos.x += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.LeftForward)
+        {
+            pos.x -= speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.RightBackward)
+        {
+            pos.x += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.LeftBackward)
+        {
+            pos.x -= speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.ForwardLeft)
+        {
+            pos.z += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.ForwardRight)
+        {
+            pos.z += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.BackwardLeft)
+        {
+            pos.z -= speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.BackwardRight)
+        {
+            pos.z -= speed * Time.deltaTime;
+        }
+
+        transform.position = pos;
+    }
+
+ //   void Movement()
+	//{
+	//		pos = transform.position;
+
+	//		if (Input.GetAxisRaw("Horizontal") > 0)
+	//		{
+	//			pos.x += speed * Time.deltaTime;
+	//		}
+	//		else if (Input.GetAxisRaw("Horizontal") < 0)
+	//		{
+	//			pos.x -= speed * Time.deltaTime;
+	//		}
+
+	//		distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, pos.z));
+
+	//		if (Input.GetAxisRaw("Vertical") > 0)
+	//		{
+	//			pos.z += speed * Time.deltaTime;
+	//		}
+	//		else if (Input.GetAxisRaw("Vertical") < 0)
+	//		{
+	//			pos.z -= speed * Time.deltaTime;
+	//		}
+
+	//		distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, centerPosition.z));
+
+	//		if (distance < radius)
+	//		{
+	//			transform.position = pos;
+	//		}
+	//		else
+	//		{
+	//			allowedPos = pos - centerPosition;
+	//			allowedPos *= radius / distance;
+	//			pos = centerPosition + allowedPos;
+	//			transform.position = pos;
+	//		}
+	//}
 
   
 
