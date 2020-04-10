@@ -18,7 +18,9 @@ public enum PlayerMovements
     BackwardRight,
     RightBackward,
     BackwardLeft,
-    LeftBackward
+    LeftBackward,
+    LeftRIght,
+    RightLeft
     //ForwardRightSideRightClick,
     //ForwardLeftSideRightClick,
     //BehindRightSideRightClick,

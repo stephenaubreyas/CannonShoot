@@ -77,6 +77,14 @@ public class Projectile : MonoBehaviour
         {
             GameManager.Instance.movement = PlayerMovements.RightBackward;
         }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Right)
+        {
+            GameManager.Instance.movement = PlayerMovements.LeftRIght;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        {
+            GameManager.Instance.movement = PlayerMovements.RightLeft;
+        }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             GameManager.Instance.movement = PlayerMovements.Left;
@@ -93,7 +101,6 @@ public class Projectile : MonoBehaviour
         {
             GameManager.Instance.movement = PlayerMovements.Backward;
         }
-
         else if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
         {
             GameManager.Instance.movement = PlayerMovements.None;
@@ -151,54 +158,23 @@ public class Projectile : MonoBehaviour
         {
             return;
         }
-       else if (movements == PlayerMovements.Left)
+       else if (movements == PlayerMovements.Left || movements == PlayerMovements.LeftForward || movements == PlayerMovements.LeftBackward||movements == PlayerMovements.RightLeft)
         {
             pos.x -= speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Right)
+        else if (movements == PlayerMovements.Right || movements == PlayerMovements.RightForward|| movements == PlayerMovements.RightBackward||movements == PlayerMovements.LeftRIght)
         {
             pos.x += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Forward)
+        else if (movements == PlayerMovements.Forward|| movements == PlayerMovements.ForwardLeft|| movements == PlayerMovements.BackwardLeft)
         {
             pos.z += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Backward)
+        else if (movements == PlayerMovements.Backward || movements == PlayerMovements.BackwardLeft || movements == PlayerMovements.BackwardRight)
         {
             pos.z -= speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.RightForward)
-        {
-            pos.x += speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.LeftForward)
-        {
-            pos.x -= speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.RightBackward)
-        {
-            pos.x += speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.LeftBackward)
-        {
-            pos.x -= speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.ForwardLeft)
-        {
-            pos.z += speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.ForwardRight)
-        {
-            pos.z += speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.BackwardLeft)
-        {
-            pos.z -= speed * Time.deltaTime;
-        }
-        else if (movements == PlayerMovements.BackwardRight)
-        {
-            pos.z -= speed * Time.deltaTime;
-        }
+        } 
+    
 
         transform.position = pos;
     }
