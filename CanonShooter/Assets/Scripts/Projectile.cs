@@ -45,71 +45,103 @@ public class Projectile : MonoBehaviour
 
 
 		//pos = transform.position;
-        if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        //if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.ForwardLeft;
+        //}
+        //else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.LeftForward;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Right)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.ForwardRight;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.RightForward;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.BackwardLeft;
+        //}
+        //else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.LeftBackward;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Right)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.BackwardRight;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.RightBackward;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Right)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.LeftRIght;
+        //}
+        //else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Left)
+        //{
+        //    GameManager.Instance.movement = PlayerMovements.RightLeft;
+        //}
+        BasicMovement(false);
+
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
         {
-            GameManager.Instance.movement = PlayerMovements.ForwardLeft;
-        }
-        else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
-        {
-            GameManager.Instance.movement = PlayerMovements.LeftForward;
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Right)
-        {
-            GameManager.Instance.movement = PlayerMovements.ForwardRight;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
-        {
-            GameManager.Instance.movement = PlayerMovements.RightForward;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Left)
-        {
-            GameManager.Instance.movement = PlayerMovements.BackwardLeft;
-        }
-        else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
-        {
-            GameManager.Instance.movement = PlayerMovements.LeftBackward;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Right)
-        {
-            GameManager.Instance.movement = PlayerMovements.BackwardRight;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
-        {
-            GameManager.Instance.movement = PlayerMovements.RightBackward;
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Right)
-        {
-            GameManager.Instance.movement = PlayerMovements.LeftRIght;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Left)
-        {
-            GameManager.Instance.movement = PlayerMovements.RightLeft;
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            GameManager.Instance.movement = PlayerMovements.Left;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            GameManager.Instance.movement = PlayerMovements.Right;
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            GameManager.Instance.movement = PlayerMovements.Forward;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            GameManager.Instance.movement = PlayerMovements.Backward;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
-        {
-            GameManager.Instance.movement = PlayerMovements.None;
+            BasicMovement(true);
         }
 
         //Movements(GameManager.Instance.movement);
 
         GameManager.InvokePlayerMethod(GameManager.Instance.movement);
 	}
+
+    void BasicMovement(bool needNoneCondition)
+    {
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                GameManager.Instance.movement = PlayerMovements.LeftForward;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                GameManager.Instance.movement = PlayerMovements.LeftBackward;
+            }
+            else
+            {
+                GameManager.Instance.movement = PlayerMovements.Left;
+            }
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                GameManager.Instance.movement = PlayerMovements.RightForward;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                GameManager.Instance.movement = PlayerMovements.RightBackward;
+            }
+            else
+            {
+                GameManager.Instance.movement = PlayerMovements.Right;
+            }
+        }
+        else if (Input.GetKey(KeyCode.UpArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.Forward;
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            GameManager.Instance.movement = PlayerMovements.Backward;
+        }
+        else if (needNoneCondition)
+        {
+            GameManager.Instance.movement = PlayerMovements.None;
+        }
+    }
 
     void Movement()
     {
@@ -158,19 +190,43 @@ public class Projectile : MonoBehaviour
         {
             return;
         }
-       else if (movements == PlayerMovements.Left || movements == PlayerMovements.LeftForward || movements == PlayerMovements.LeftBackward||movements == PlayerMovements.RightLeft)
+        else if(movements == PlayerMovements.LeftForward)
         {
             pos.x -= speed * Time.deltaTime;
+
+            pos.z += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Right || movements == PlayerMovements.RightForward|| movements == PlayerMovements.RightBackward||movements == PlayerMovements.LeftRIght)
+        else if(movements == PlayerMovements.RightForward)
+        {
+            pos.x += speed * Time.deltaTime;
+
+            pos.z += speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.LeftBackward)
+        {
+            pos.x -= speed * Time.deltaTime;
+
+            pos.z -= speed * Time.deltaTime;
+        }
+        else if(movements == PlayerMovements.RightBackward)
+        {
+            pos.x += speed * Time.deltaTime;
+
+            pos.z -= speed * Time.deltaTime;
+        }
+       else if (movements == PlayerMovements.Left)
+        { 
+            pos.x -= speed * Time.deltaTime;
+        }
+        else if (movements == PlayerMovements.Right)
         {
             pos.x += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Forward|| movements == PlayerMovements.ForwardLeft|| movements == PlayerMovements.BackwardLeft)
+        else if (movements == PlayerMovements.Forward)
         {
             pos.z += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Backward || movements == PlayerMovements.BackwardLeft || movements == PlayerMovements.BackwardRight)
+        else if (movements == PlayerMovements.Backward)
         {
             pos.z -= speed * Time.deltaTime;
         } 
