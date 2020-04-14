@@ -49,14 +49,12 @@ public class Projectile : MonoBehaviour
             BasicMovement(true);
         }
 
-        //Movements(GameManager.Instance.movement);
-
         GameManager.InvokePlayerMethod(GameManager.Instance.movement);
 	}
 
     void BasicMovement(bool needNoneCondition)
     {
-        if (Input.GetKey(KeyCode.LeftArrow) /*&& GameManager.Instance.movement!=PlayerMovements.Right*/)
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             if (Input.GetKey(KeyCode.UpArrow))
             {
@@ -126,45 +124,6 @@ public class Projectile : MonoBehaviour
         else if (needNoneCondition)
         {
             GameManager.Instance.movement = PlayerMovements.None;
-        }
-    }
-
-    void Movement()
-    {
-        pos = transform.position;
-
-        if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-            pos.x += speed * Time.deltaTime;
-        }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
-        {
-            pos.x -= speed * Time.deltaTime;
-        }
-
-        distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, pos.z));
-
-        if (Input.GetAxisRaw("Vertical") > 0)
-        {
-            pos.z += speed * Time.deltaTime;
-        }
-        else if (Input.GetAxisRaw("Vertical") < 0)
-        {
-            pos.z -= speed * Time.deltaTime;
-        }
-
-        distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, centerPosition.z));
-
-        if (distance < radius)
-        {
-            transform.position = pos;
-        }
-        else
-        {
-            allowedPos = pos - centerPosition;
-            allowedPos *= radius / distance;
-            pos = centerPosition + allowedPos;
-            transform.position = pos;
         }
     }
 
