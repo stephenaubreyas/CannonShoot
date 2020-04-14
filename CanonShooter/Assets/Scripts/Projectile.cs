@@ -42,49 +42,6 @@ public class Projectile : MonoBehaviour
 	}
 	void Movekey()
     {
-
-
-		//pos = transform.position;
-        //if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Left)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.ForwardLeft;
-        //}
-        //else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.LeftForward;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.UpArrow) && GameManager.Instance.movement == PlayerMovements.Right)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.ForwardRight;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Forward)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.RightForward;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Left)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.BackwardLeft;
-        //}
-        //else if(Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.LeftBackward;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.DownArrow) && GameManager.Instance.movement == PlayerMovements.Right)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.BackwardRight;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Backward)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.RightBackward;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.LeftArrow) && GameManager.Instance.movement == PlayerMovements.Right)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.LeftRIght;
-        //}
-        //else if (Input.GetKeyDown(KeyCode.RightArrow) && GameManager.Instance.movement == PlayerMovements.Left)
-        //{
-        //    GameManager.Instance.movement = PlayerMovements.RightLeft;
-        //}
         BasicMovement(false);
 
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
@@ -99,7 +56,7 @@ public class Projectile : MonoBehaviour
 
     void BasicMovement(bool needNoneCondition)
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) /*&& GameManager.Instance.movement!=PlayerMovements.Right*/)
         {
             if (Input.GetKey(KeyCode.UpArrow))
             {
@@ -108,6 +65,17 @@ public class Projectile : MonoBehaviour
             else if (Input.GetKey(KeyCode.DownArrow))
             {
                 GameManager.Instance.movement = PlayerMovements.LeftBackward;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                if (GameManager.Instance.movement == PlayerMovements.Left)
+                {
+                    GameManager.Instance.movement = PlayerMovements.LeftRight;
+                }
+                else if (GameManager.Instance.movement == PlayerMovements.Right)
+                {
+                    GameManager.Instance.movement = PlayerMovements.RightLeft;
+                }
             }
             else
             {
@@ -124,6 +92,10 @@ public class Projectile : MonoBehaviour
             {
                 GameManager.Instance.movement = PlayerMovements.RightBackward;
             }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                GameManager.Instance.movement = PlayerMovements.RightLeft;
+            }
             else
             {
                 GameManager.Instance.movement = PlayerMovements.Right;
@@ -131,7 +103,21 @@ public class Projectile : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.UpArrow))
         {
-            GameManager.Instance.movement = PlayerMovements.Forward;
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                if (GameManager.Instance.movement == PlayerMovements.Forward)
+                {
+                    GameManager.Instance.movement = PlayerMovements.ForwadBackward;
+                }
+                else if (GameManager.Instance.movement == PlayerMovements.Backward)
+                {
+                    GameManager.Instance.movement = PlayerMovements.BackwardForward;
+                }
+            }
+            else
+            {
+                GameManager.Instance.movement = PlayerMovements.Forward;
+            }
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
@@ -214,65 +200,25 @@ public class Projectile : MonoBehaviour
 
             pos.z -= speed * Time.deltaTime;
         }
-       else if (movements == PlayerMovements.Left)
+       else if (movements == PlayerMovements.Left || movements == PlayerMovements.RightLeft)
         { 
             pos.x -= speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Right)
+        else if (movements == PlayerMovements.Right || movements == PlayerMovements.LeftRight)
         {
             pos.x += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Forward)
+        else if (movements == PlayerMovements.Forward ||movements == PlayerMovements.BackwardForward)
         {
             pos.z += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Backward)
+        else if (movements == PlayerMovements.Backward || movements == PlayerMovements.ForwadBackward)
         {
             pos.z -= speed * Time.deltaTime;
         } 
-    
 
         transform.position = pos;
     }
-
- //   void Movement()
-	//{
-	//		pos = transform.position;
-
-	//		if (Input.GetAxisRaw("Horizontal") > 0)
-	//		{
-	//			pos.x += speed * Time.deltaTime;
-	//		}
-	//		else if (Input.GetAxisRaw("Horizontal") < 0)
-	//		{
-	//			pos.x -= speed * Time.deltaTime;
-	//		}
-
-	//		distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, pos.z));
-
-	//		if (Input.GetAxisRaw("Vertical") > 0)
-	//		{
-	//			pos.z += speed * Time.deltaTime;
-	//		}
-	//		else if (Input.GetAxisRaw("Vertical") < 0)
-	//		{
-	//			pos.z -= speed * Time.deltaTime;
-	//		}
-
-	//		distance = Vector3.Distance(pos, new Vector3(centerPosition.x, 0.5f, centerPosition.z));
-
-	//		if (distance < radius)
-	//		{
-	//			transform.position = pos;
-	//		}
-	//		else
-	//		{
-	//			allowedPos = pos - centerPosition;
-	//			allowedPos *= radius / distance;
-	//			pos = centerPosition + allowedPos;
-	//			transform.position = pos;
-	//		}
-	//}
 
   
 
