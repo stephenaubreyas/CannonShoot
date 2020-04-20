@@ -13,8 +13,8 @@ public class Projectile : MonoBehaviour
 	public int lineSegment = 10;
 	public ParticleSystem muzzleFlash;
 	[SerializeField] readonly float speed = 10.0f;
-	float radius, distance;
-	Vector3 centerPosition, allowedPos, pos;
+	private float radius, distance;
+	private Vector3 centerPosition, allowedPos, pos;
 
 	void Awake()
 	{
@@ -22,24 +22,31 @@ public class Projectile : MonoBehaviour
 
         GameManager.playerMovement += Movements;
 
+        GameManager.mouseMovement += MouseMovements;
+
 		isAlive = true;
 	}
+
 	void Start()
 	{
 		radius = 9.75f;
-		centerPosition = new Vector3(0f, 0.5f, -40);
+		centerPosition = new Vector3(0f, 0.5f, -120);
 		transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(Random.value, Random.value, Random.value);
 		Sphere.transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(Random.value, Random.value, Random.value);
 		lineVisual.positionCount = lineSegment;
 	}
-	void Update()
+
+
+    void Update()
 	{
 		Movekey();
 	}
+
 	void LateUpdate()
 	{
 		OnMouseClick();
 	}
+
 	void Movekey()
     {
         BasicMovement(false);
@@ -131,17 +138,17 @@ public class Projectile : MonoBehaviour
     {
         pos = transform.position;
 
-        if(movements == PlayerMovements.None)
+        if (movements == PlayerMovements.None)
         {
             return;
         }
-        else if(movements == PlayerMovements.LeftForward)
+        else if (movements == PlayerMovements.LeftForward)
         {
             pos.x -= speed * Time.deltaTime;
 
             pos.z += speed * Time.deltaTime;
         }
-        else if(movements == PlayerMovements.RightForward)
+        else if (movements == PlayerMovements.RightForward)
         {
             pos.x += speed * Time.deltaTime;
 
@@ -153,64 +160,91 @@ public class Projectile : MonoBehaviour
 
             pos.z -= speed * Time.deltaTime;
         }
-        else if(movements == PlayerMovements.RightBackward)
+        else if (movements == PlayerMovements.RightBackward)
         {
             pos.x += speed * Time.deltaTime;
 
             pos.z -= speed * Time.deltaTime;
         }
-       else if (movements == PlayerMovements.Left || movements == PlayerMovements.RightLeft)
-        { 
+        else if (movements == PlayerMovements.Left || movements == PlayerMovements.RightLeft)
+        {
             pos.x -= speed * Time.deltaTime;
         }
         else if (movements == PlayerMovements.Right || movements == PlayerMovements.LeftRight)
         {
             pos.x += speed * Time.deltaTime;
         }
-        else if (movements == PlayerMovements.Forward ||movements == PlayerMovements.BackwardForward)
+        else if (movements == PlayerMovements.Forward || movements == PlayerMovements.BackwardForward)
         {
             pos.z += speed * Time.deltaTime;
         }
         else if (movements == PlayerMovements.Backward || movements == PlayerMovements.ForwadBackward)
         {
             pos.z -= speed * Time.deltaTime;
-        } 
+        }
+
+        distance = Vector3.Distance(pos, centerPosition);
+
+        if (distance > radius)
+        {
+            allowedPos = pos - centerPosition;
+            allowedPos *= radius / distance;
+            pos = centerPosition + allowedPos;
+        }
 
         transform.position = pos;
     }
 
-  
+    void OnMouseClick()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            GameManager.Instance.mouseMovements = global::MouseMovements.RightClick;
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            GameManager.Instance.mouseMovements = global::MouseMovements.RightClickReleased;
+        }
+        else if (Input.GetMouseButtonDown(0) && !Input.GetMouseButton(1) && !Input.GetMouseButtonUp(1))
+        {
+            GameManager.Instance.mouseMovements = global::MouseMovements.LeftClick;
+        }
+        else if (!Input.GetMouseButton(1) && !Input.GetMouseButtonDown(1) && !Input.GetMouseButtonUp(1) && !Input.GetMouseButtonDown(0))
+        {
+            GameManager.Instance.mouseMovements = global::MouseMovements.None;
+        }
 
-	void OnMouseClick()
-	{
-		if(Input.GetMouseButton(1) == false && Input.GetMouseButtonDown(1) == false && Input.GetMouseButtonUp(1) == false && Input.GetMouseButtonDown(0) == false)
-		{
-			return;
-		}
-		if (Input.GetMouseButton(1))
-		{
+        GameManager.InvokeMouseMethod(GameManager.Instance.mouseMovements);
+    }
+
+    void MouseMovements(MouseMovements move)
+    {
+        if(move == global::MouseMovements.None)
+        {
+            return;
+        }
+        else if(move == global::MouseMovements.RightClick)
+        {
             GameManager.InvokeShootMethod();
-		}
-		else if (Input.GetMouseButtonUp(1))
-		{
-			lineVisual.enabled = false;
-			Pointer.SetActive(false);
-			Cursor.visible = true;
-			Cursor.lockState = CursorLockMode.None;
-		}
-		else if (Input.GetMouseButtonDown(0) && Input.GetMouseButton(1) == false && Input.GetMouseButtonUp(1) == false)
-		{
-			muzzleFlash.Play();
-			Rigidbody R = Instantiate(bulletPrefabs, shootPoint.transform.position, shootPoint.transform.rotation);
-			Vector3 D = shootPoint.forward;
-			R.AddForce(D * 1000);
-		}
-	}
+        }
+        else if(move == global::MouseMovements.RightClickReleased)
+        {
+            lineVisual.enabled = false;
+            Pointer.SetActive(false);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else if(move == global::MouseMovements.LeftClick)
+        {
+            muzzleFlash.Play();
+            Rigidbody R = Instantiate(bulletPrefabs, shootPoint.transform.position, shootPoint.transform.rotation);
+            Vector3 D = shootPoint.forward;
+            R.AddForce(D * 1000);
+        }
+    }
 	#region Projectile
 	void LaunchProjectile()
 	{
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
         lineVisual.enabled = true;
         Pointer.SetActive(true);
 
@@ -220,6 +254,7 @@ public class Projectile : MonoBehaviour
 		if (Physics.Raycast(camRay, out hit, 100f, layer))
 		{
 			Pointer.transform.position = hit.point + Vector3.up * 0.1f;
+
 			Vector3 Vo = CalculateVelocity(hit.point, shootPoint.position, 1f);
 
 			Visualize(Vo);
@@ -233,15 +268,32 @@ public class Projectile : MonoBehaviour
                 obj.velocity = Vo;
             }
         }
+        else
+        {
+            StopShowingLineRenderer();
+        }
 	}
-	void Visualize(Vector3 vo)
-	{
-		for (int i = 0; i < lineSegment; i++)
-		{
-			Vector3 pos = CalculatePosInTime(vo, i / (float)lineSegment);
-			lineVisual.SetPosition(i, pos);
-		}
-	}
+
+    void StopShowingLineRenderer()
+    {
+        lineVisual.enabled = false;
+
+        Pointer.SetActive(false);
+
+        Cursor.visible = true;
+
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    void Visualize(Vector3 vo)
+    {
+        for (int i = 0; i < lineSegment; i++)
+        {
+            Vector3 pos = CalculatePosInTime(vo, i / (float)lineSegment);
+            lineVisual.SetPosition(i, pos);
+        }
+    }
+
 	Vector3 CalculateVelocity(Vector3 target, Vector3 origin, float time)
 	{
 		//define the distance x and y first

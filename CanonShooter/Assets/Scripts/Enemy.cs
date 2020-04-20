@@ -5,55 +5,64 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public float chaseSpeed=5f;
-    public float FallSpeed=2f;
+    public float distance, radius;
+
+    public float count;
+
+    public Vector3 center;
+
+    public Rigidbody prefab;
+
+
+    public float chaseSpeed = 5f;
+    public float FallSpeed = 2f;
     GameObject enemy;
-	GameObject player;
-	public NavMeshAgent agent;
-	public GameObject explosion;
+    GameObject player;
+    public NavMeshAgent agent;
+    public GameObject explosion;
     public GameObject explosion1;
 
     GameObject temp;
     GameObject temp1;
 
     private Animator animator;
-    public bool fall=false;
+    public bool fall = false;
 
-	private void Awake()
-	{
+    private void Awake()
+    {
         animator = GetComponent<Animator>();
 
         player = GameObject.FindGameObjectWithTag("Player");
-        
+
         agent.speed = chaseSpeed;
-		enemy = this.gameObject;
-		enemy.GetComponent<Renderer>().material.color = new Color(0, 1f, 1f);
+        enemy = this.gameObject;
+        enemy.GetComponent<Renderer>().material.color = new Color(0, 1f, 1f);
 
         Debug.Log("Player : " + player);
 
         animator.SetBool("idle", true);
-	}
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player")
         {
             Debug.Log("hey kedar?");
 
             Destroy(player);
         }
-       
+
     }
 
 
     void OnTriggerEnter(Collider hit)
-	{
-		if (hit.gameObject.tag == "Bullet")
-		{
+    {
+        if (hit.gameObject.tag == "Bullet")
+        {
             StartCoroutine((EnemyDead(hit)));
         }
-       
-	}
+
+    }
 
     IEnumerator EnemyDead(Collider hit)
     {
@@ -82,31 +91,71 @@ public class Enemy : MonoBehaviour
         GameManager.Instance.score++;
 
         GameManager.Instance.scoreText.text = "Score : " + GameManager.Instance.score.ToString();
-      
+
     }
 
-	private void FixedUpdate()
-	{
-		if (Projectile.isAlive == false)
-		{
-			Stop();
-		}
-		else
-		{
+    private void FixedUpdate()
+    {
 
-            GetPlayerSpawnPosition();
-		}
-	}
-	public void GetPlayerSpawnPosition()
-    { 
-        agent.SetDestination(player.transform.position);
-        animator.SetBool("idle", false);
-        animator.SetBool("Walk", true);
-        agent.speed = chaseSpeed;
-        Debug.Log("Walking"); 
-	}
-	public void Stop()
-	{
-		agent.isStopped = true;
-	}
+        GetPlayerSpawnPosition();
+    }
+
+    public void GetPlayerSpawnPosition()
+    {
+        if (!GameManager.Instance.playerDead)
+        {
+            //Debug.Log( Time.deltaTime);
+
+            agent.SetDestination(player.transform.position);
+
+            animator.SetBool("idle", false);
+
+            animator.SetBool("Walk", true);
+
+            agent.speed = chaseSpeed;
+
+            distance = Vector3.Distance(transform.position, center);
+
+            if (distance <= radius)
+            {
+                Stop();
+
+                count += Time.deltaTime;
+
+                if (count <= 5 && (int)count > 0)
+                {
+                    Rigidbody obj = Instantiate(prefab, new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity);
+
+                    obj.transform.SetParent(this.transform);
+
+                    if (GameManager.Instance.fenceDestroyed)
+                    {
+                        obj.velocity = new Vector3(player.transform.position.x - transform.position.x, -0.5f, player.transform.position.z - transform.position.z);
+                    }
+                    else
+                    {
+                        foreach (var i in GameManager.Instance.fences)
+                        {
+                            obj.velocity = new Vector3(i.transform.position.x - transform.position.x, -0.5f, i.transform.position.z - transform.position.z);
+                        }
+                    }
+
+                    count--;
+                }
+            }
+        }
+        else
+        {
+            Destroy(enemy);
+        }
+    }
+
+    public void Stop()
+    {
+        animator.SetBool("idle", true);
+
+        animator.SetBool("Walk", false);
+
+        agent.isStopped = true;
+    }
 }

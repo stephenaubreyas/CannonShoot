@@ -1989,11 +1989,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df05a4294f7eee4f8f9f14680760e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distance: 0
+  radius: 20
+  count: 0
+  center: {x: 0, y: 0, z: -120}
+  prefab: {fileID: -4374517328798403996, guid: a88f7a828d3cc254fb55884b72def825, type: 3}
   chaseSpeed: 3
   FallSpeed: 2
   agent: {fileID: 3402236661764981519}
-  explosion: {fileID: 1000012909287652, guid: 573cb4a558f508449b2c52bbe39168ad, type: 3}
-  explosion1: {fileID: 1000010675638318, guid: a3768c8a9d1b90d4bb0eb0e4bdbe730c, type: 3}
+  explosion: {fileID: 1000012909287652, guid: dad919c91d53e0e4f891db798ae243e8, type: 3}
+  explosion1: {fileID: 1000010675638318, guid: fe80ae3db11103146b2ce9e0d5e92528, type: 3}
   fall: 0
 --- !u!195 &3402236661764981519
 NavMeshAgent:
