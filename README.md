@@ -1,2 +1,2 @@
-# Fight for earth game.(Collage Project)
+# Cannon Shoot.(Collage Project)
 - Casual 3d shooter game.
