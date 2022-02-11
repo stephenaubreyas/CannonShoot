@@ -4,7 +4,7 @@
 **Note:** Some of the art files are too large, So we couldn't update the project, use the link below to download the complete project(Do not clone from git).
 
 # Phase - II (Fight for the earth)
-https://drive.google.com/file/d/14QSvRpOqTTW5UoeuGUN3rihm8MTSeObU/view?usp=sharing
+https://drive.google.com/drive/folders/18y_kcLJG-NXHVYH7WJ_BOXn_bbj7CP-F?usp=sharing
 Main/Starting Scene Name -> EntryScene
 Main/Starting Scene Path -> Assets\Scenes\Using_Main.Scenes\EntryScene
 
