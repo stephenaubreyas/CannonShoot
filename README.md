@@ -2,6 +2,7 @@
 - Casual 3d shooter game.
 
 **Note:** Some of the art files are too large, So we couldn't update the project, use the link below to download the complete project(Do not clone from git).
+- **At the first run after the project setup, the game might have some frame drops**
 
 # Phase - II (Fight for the earth)
 https://drive.google.com/drive/folders/18y_kcLJG-NXHVYH7WJ_BOXn_bbj7CP-F?usp=sharing
